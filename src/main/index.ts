@@ -1,74 +1,74 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import { app } from 'electron'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
+import {
+  registerAssetProtocolHandler,
+  registerAssetProtocolScheme
+} from './services/assets'
+import { registerIpc } from './services/ipc'
+import { getSettings } from './services/settings'
+import { TimerController } from './services/timer'
+import { TrayManager } from './services/tray'
+import { WindowManager } from './services/windows'
 
-function createWindow(): void {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
-    show: false,
-    autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    }
-  })
+registerAssetProtocolScheme()
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
+let isQuitting = false
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
+const windows = new WindowManager({
+  onMainWindowReady: () => sendTick(),
+  onOverlayReady: () => sendTick(),
+  onMainWindowHide: () => tray.create(),
+  shouldQuit: () => isQuitting
+})
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+const timer = new TimerController({
+  getSettings,
+  onBreakStart: () => windows.createOverlayWindow(),
+  onBreakEnd: () => windows.destroyOverlayWindow(),
+  onTick: (snapshot) => {
+    windows.sendTimerTick(snapshot)
+    tray.rebuildMenu()
   }
+})
+
+const tray = new TrayManager({
+  getTimeLeft: () => timer.snapshot.timeLeft,
+  isPaused: () => timer.isPaused,
+  onShowWindow: () => windows.showMainWindow(),
+  onTogglePause: () => timer.togglePause(),
+  onSkipSession: () => timer.skip(),
+  onOpenSettings: () => windows.openSettingsWindow(),
+  onQuit: () => {
+    isQuitting = true
+  }
+})
+
+function sendTick(): void {
+  windows.sendTimerTick(timer.snapshot)
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.posadoro.app')
+  registerAssetProtocolHandler()
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  registerIpc({ timer, windows })
+  tray.create()
+  windows.createMainWindow()
+  timer.reset()
 
-  createWindow()
-
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  app.on('activate', () => {
+    if (!windows.main || windows.main.isDestroyed()) windows.createMainWindow()
+    windows.showMainWindow()
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+app.on('before-quit', () => {
+  isQuitting = true
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+app.on('window-all-closed', () => {})

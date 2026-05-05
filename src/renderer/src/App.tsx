@@ -1,11 +1,13 @@
+import { BreakOverlay } from './screens/BreakOverlay'
+import { MiniTimer } from './screens/MiniTimer'
+import { SettingsWindow } from './screens/SettingsWindow'
 
 function App(): React.JSX.Element {
+  const page = new URLSearchParams(window.location.search).get('window')
 
-  return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </>
-  )
+  if (page === 'overlay') return <BreakOverlay />
+  if (page === 'settings') return <SettingsWindow />
+  return <MiniTimer />
 }
 
 export default App
