@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { NumberField, TextAreaField } from '../components/form-fields'
 import { DEFAULT_SETTINGS } from '../constants'
 import { getFileName } from '../lib/format'
+import { isVideoFile } from '../lib/media'
 import type { PresetCat, Settings } from '../types'
 
 export function SettingsWindow(): React.JSX.Element {
@@ -23,6 +24,9 @@ export function SettingsWindow(): React.JSX.Element {
 
   const selectedPreset = presets.find((preset) => preset.id === formValues.catPresetId)
   const previewSrc = formValues.catGifPath ? customPreviewUrl : selectedPreset?.url
+  const previewIsVideo = formValues.catGifPath
+    ? isVideoFile(formValues.catGifPath)
+    : isVideoFile(selectedPreset?.path)
   const previewLabel = formValues.catGifPath
     ? getFileName(formValues.catGifPath)
     : selectedPreset?.label || 'no cat selected'
@@ -139,7 +143,18 @@ export function SettingsWindow(): React.JSX.Element {
                     }))
                   }
                 >
-                  <img className="h-16 w-16 rounded-lg object-contain" src={preset.url} alt="" />
+                  {isVideoFile(preset.path) ? (
+                    <video
+                      className="h-16 w-16 rounded-lg object-contain"
+                      src={preset.url}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    />
+                  ) : (
+                    <img className="h-16 w-16 rounded-lg object-contain" src={preset.url} alt="" />
+                  )}
                   <span className="text-center text-[11px] text-[#5F5E5A]">{preset.label}</span>
                 </button>
               )
@@ -151,11 +166,22 @@ export function SettingsWindow(): React.JSX.Element {
             className="w-full cursor-pointer rounded-xl border-2 border-dashed border-[#B4B2A9] py-2 text-sm text-[#888780] transition-colors hover:border-[#2C2C2A] hover:text-[#2C2C2A]"
             onClick={chooseCustomCat}
           >
-            + upload gif or png
+            + upload image or video
           </button>
 
           <div className="flex w-full flex-col items-center gap-1 border-t border-[#D3D1C7] pt-3">
-            {previewSrc ? (
+            {previewSrc && previewIsVideo ? (
+              <video
+                id="cat-preview"
+                className="h-auto max-h-40 max-w-full object-contain"
+                style={{ width: Math.min(formValues.catGifSize, 260) }}
+                src={previewSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            ) : previewSrc ? (
               <img
                 id="cat-preview"
                 className="h-auto max-h-40 max-w-full object-contain"

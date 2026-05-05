@@ -35,7 +35,12 @@ export function registerIpc({ timer, windows }: IpcDependencies): void {
   ipcMain.handle('file:to-url', (_, filePath: string) => pathToAssetUrl(filePath))
   ipcMain.handle('dialog:select-gif', async () => {
     const result = await dialog.showOpenDialog({
-      filters: [{ name: 'Images', extensions: ['gif', 'png'] }],
+      filters: [
+        {
+          name: 'Images and videos',
+          extensions: ['gif', 'png', 'jpg', 'jpeg', 'webp', 'mp4', 'webm', 'mov', 'm4v', 'ogv']
+        }
+      ],
       properties: ['openFile']
     })
     return result.canceled ? null : result.filePaths[0]

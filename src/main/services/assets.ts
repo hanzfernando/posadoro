@@ -16,6 +16,7 @@ export function registerAssetProtocolScheme(): void {
       privileges: {
         standard: true,
         secure: true,
+        stream: true,
         supportFetchAPI: true
       }
     }

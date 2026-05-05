@@ -5,9 +5,9 @@ export const DEFAULT_SETTINGS: Settings = {
   shortBreak: 5,
   longBreak: 15,
   sessionsBeforeLong: 4,
-  catPresetId: 'cat-beg',
+  catPresetId: 'cat-ooiai',
   catGifPath: null,
-  catGifSize: 320,
+  catGifSize: 720,
   breakMessageText: 'you earned this break. stretch, hydrate, stare into the void.',
   guiltMessageText: "fine. go back to work. i didn't want to spend time with you anyway."
 }

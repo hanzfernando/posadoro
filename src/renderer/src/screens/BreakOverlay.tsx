@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { DEFAULT_SETTINGS, INITIAL_TIMER } from '../constants'
 import { formatTime } from '../lib/format'
+import { isVideoFile } from '../lib/media'
 import type { Settings, TimerSnapshot } from '../types'
 
 export function BreakOverlay(): React.JSX.Element {
@@ -19,19 +20,36 @@ export function BreakOverlay(): React.JSX.Element {
     window.setTimeout(() => window.electronAPI.skipBreak(), 2000)
   }
 
+  const mediaSource = settings.resolvedCatGifUrl
+  const mediaPath = settings.resolvedCatGifPath || settings.catGifPath
+  const isVideo = isVideoFile(mediaPath)
+
   return (
     <main
-      className="fixed inset-0 flex flex-col items-center justify-end gap-4 pb-12 [-webkit-app-region:no-drag]"
+      className="fixed inset-0 flex flex-col items-center justify-end gap-4 p-12 [-webkit-app-region:no-drag]"
       style={{ background: 'rgba(18, 17, 15, 0.82)' }}
     >
-      <img
-        id="cat-gif"
-        className="h-auto max-h-[55vh] max-w-[90vw] object-contain drop-shadow-2xl"
-        style={{ width: settings.catGifSize }}
-        src={settings.resolvedCatGifUrl}
-        onError={() => setCatFailed(true)}
-        alt=""
-      />
+      {isVideo ? (
+        <video
+          id="cat-gif"
+          className="flex-1 min-h-0 max-h-[80vh] max-w-[90vw] object-contain drop-shadow-2xl"
+          style={{ width: 'auto', height: settings.catGifSize } }
+          src={mediaSource}
+          onError={() => setCatFailed(true)}
+          autoPlay
+          loop
+          playsInline
+        />
+      ) : (
+        <img
+          id="cat-gif"
+          className="flex-1 min-h-0 max-h-[80vh] max-w-[90vw] object-contain drop-shadow-2xl"
+          style={{ width: 'auto', height: settings.catGifSize } }
+          src={mediaSource}
+          onError={() => setCatFailed(true)}
+          alt=""
+        />
+      )}
       {catFailed ? (
         <div
           className="border-2 px-3 py-2 text-sm font-bold uppercase tracking-widest"
@@ -41,7 +59,7 @@ export function BreakOverlay(): React.JSX.Element {
             color: '#D95F3B',
           }}
         >
-          cat image could not load
+          cat media could not load
         </div>
       ) : null}
 

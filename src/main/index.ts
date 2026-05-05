@@ -11,6 +11,7 @@ import { TrayManager } from './services/tray'
 import { WindowManager } from './services/windows'
 
 registerAssetProtocolScheme()
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
 let isQuitting = false
 
