@@ -73,8 +73,7 @@ export class TimerController {
   skipBreak(): void {
     if (this.state.sessionType === 'work') return
     this.clear()
-    this.options.onBreakEnd()
-    this.setSession('work')
+    this.finishBreak()
   }
 
   applySettings(settings: Settings): void {
@@ -125,6 +124,13 @@ export class TimerController {
       return
     }
 
+    this.finishBreak()
+  }
+
+  private finishBreak(): void {
+    if (this.state.sessionType === 'longBreak') {
+      this.state.sessionCount = 0
+    }
     this.options.onBreakEnd()
     this.setSession('work')
   }

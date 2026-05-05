@@ -15,7 +15,7 @@ export function getSessionLabel(timer: TimerSnapshot): string {
     return `Focus session ${Math.min(timer.sessionCount + 1, timer.totalSessions)} / ${timer.totalSessions}`
   }
   const label = timer.sessionType === 'longBreak' ? 'Long break' : 'Short break'
-  return `${label} ${timer.sessionCount} / ${timer.totalSessions}`
+  return `${label} ${Math.min(timer.sessionCount, timer.totalSessions)} / ${timer.totalSessions}`
 }
 
 export function getNextSessionLabel(
