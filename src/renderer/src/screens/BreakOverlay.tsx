@@ -9,11 +9,21 @@ export function BreakOverlay(): React.JSX.Element {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
   const [dismissed, setDismissed] = useState(false)
   const [catFailed, setCatFailed] = useState(false)
+  const [volume, setVolume] = useState(0.05)
+  const videoRef = (el: HTMLVideoElement | null) => {
+    if (el) {
+      el.volume = volume
+    }
+  }
 
   useEffect(() => window.electronAPI.onTick(setTimer), [])
   useEffect(() => {
     window.electronAPI.getSettings().then(setSettings)
   }, [])
+  useEffect(() => {
+    const video = document.getElementById('cat-gif') as HTMLVideoElement | null
+    if (video) video.volume = volume
+  }, [volume])
 
   const dismiss = (): void => {
     setDismissed(true)
@@ -31,6 +41,7 @@ export function BreakOverlay(): React.JSX.Element {
     >
       {isVideo ? (
         <video
+          ref={videoRef}
           id="cat-gif"
           className="flex-1 min-h-0 max-h-[80vh] max-w-[90vw] object-contain drop-shadow-2xl"
           style={{ width: 'auto', height: settings.catGifSize } }
@@ -107,6 +118,25 @@ export function BreakOverlay(): React.JSX.Element {
       >
         dismiss
       </button>
+
+      {isVideo && !dismissed ? (
+        <div className="flex items-center gap-3">
+          <span style={{ color: '#B8B39E', fontSize: '0.875rem', fontWeight: 'bold' }}>
+            Volume
+          </span>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={Math.round(volume * 100)}
+            onChange={e => setVolume(Number(e.target.value) / 100)}
+            className="w-32 cursor-pointer"
+            style={{
+              accentColor: '#F5F2EA',
+            }}
+          />
+        </div>
+      ) : null}
 
       <div
         className={`px-4 text-center text-xs font-bold uppercase tracking-[0.15em] ${dismissed ? '' : 'hidden'}`}

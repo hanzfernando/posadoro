@@ -20,17 +20,17 @@ export function MiniTimer(): React.JSX.Element {
   const next = getNextSessionLabel(timer, settings)
 
   return (
-    <main className="flex h-screen flex-col items-center bg-[#F1EFE8] text-[#2C2C2A]">
-      <div className="flex h-8 w-full items-center justify-between px-2 [-webkit-app-region:drag]">
+    <main className="flex h-screen flex-col items-center overflow-hidden border-2 border-[#272522] bg-[#F8E6A6] text-[#272522] shadow-[inset_0_0_0_4px_#FFF8DF]">
+      <div className="flex h-9 w-full items-center justify-between border-b-2 border-[#272522] bg-[#F08D65] px-2 [-webkit-app-region:drag]">
         <button
-          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[#5F5E5A] transition-colors hover:bg-[#D3D1C7] hover:text-[#2C2C2A] [-webkit-app-region:no-drag]"
+          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border-2 border-[#272522] bg-[#FFF8DF] text-[#272522] shadow-[2px_2px_0_#272522] transition-all hover:-translate-y-0.5 hover:bg-[#FFD66E] [-webkit-app-region:no-drag]"
           onClick={() => window.electronAPI.openSettings()}
           aria-label="Open settings"
         >
           <GearIcon />
         </button>
         <button
-          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-lg leading-none text-[#5F5E5A] transition-colors hover:bg-[#D3D1C7] hover:text-[#2C2C2A] [-webkit-app-region:no-drag]"
+          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border-2 border-[#272522] bg-[#FFF8DF] text-base font-black leading-none text-[#272522] shadow-[2px_2px_0_#272522] transition-all hover:-translate-y-0.5 hover:bg-[#FFD66E] [-webkit-app-region:no-drag]"
           onClick={() => window.electronAPI.hideWindow()}
           aria-label="Hide Posadoro"
         >
@@ -38,27 +38,26 @@ export function MiniTimer(): React.JSX.Element {
         </button>
       </div>
 
-      <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5F5E5A]">
+      <div className="mt-3 border-2 border-[#272522] bg-[#FFF8DF] px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#272522] shadow-[3px_3px_0_#272522]">
         {getSessionLabel(timer)}
       </div>
 
-      <div className="relative mt-4 h-40 w-40">
+      <div className="relative mt-4 h-40 w-40 rounded-md border-2 border-[#272522] bg-[#FFFDF2] p-2 shadow-[6px_6px_0_#272522]">
         <svg className="h-full w-full" viewBox="0 0 100 100" aria-hidden="true">
-          <circle cx="50" cy="50" r="42" stroke="#D3D1C7" strokeWidth="7" fill="none" />
+          <circle cx="50" cy="50" r="42" stroke="#F8E6A6" strokeWidth="8" fill="none" />
           <circle
             cx="50"
             cy="50"
             r="42"
-            stroke="#2C2C2A"
-            strokeWidth="7"
-            strokeLinecap="round"
+            stroke="#272522"
+            strokeWidth="8"
             fill="none"
             strokeDasharray={TIMER_RING_LENGTH}
             strokeDashoffset={dashOffset}
             transform="rotate(-90 50 50)"
           />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center text-4xl font-medium tabular-nums">
+        <div className="absolute inset-0 flex items-center justify-center text-[2.35rem] font-black tabular-nums">
           {formatTime(timer.timeLeft)}
         </div>
       </div>
@@ -68,7 +67,7 @@ export function MiniTimer(): React.JSX.Element {
           <ResetIcon />
         </IconButton>
         <button
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border-2 border-[#2C2C2A] bg-[#2C2C2A] text-[#F1EFE8] transition-transform hover:scale-105"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-md border-2 border-[#272522] bg-[#272522] text-[#FFF8DF] shadow-[4px_4px_0_#F08D65] transition-all hover:-translate-y-0.5 hover:bg-[#3A3933] hover:shadow-[5px_5px_0_#F08D65] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           onClick={() =>
             timer.isPaused ? window.electronAPI.resume() : window.electronAPI.pause()
           }
@@ -81,7 +80,7 @@ export function MiniTimer(): React.JSX.Element {
         </IconButton>
       </div>
 
-      <footer className="mt-auto flex h-10 w-full items-center justify-center border-t border-[#D3D1C7] text-[11px] text-[#5F5E5A]">
+      <footer className="mt-auto flex h-10 w-full items-center justify-center border-t-2 border-[#272522] bg-[#FFF8DF] text-[11px] font-bold text-[#3A3933]">
         next: {next.label} - {next.minutes} min
       </footer>
     </main>

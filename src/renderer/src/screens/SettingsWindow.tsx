@@ -53,13 +53,13 @@ export function SettingsWindow(): React.JSX.Element {
   }
 
   return (
-    <main className="h-screen overflow-hidden bg-[#F1EFE8] text-[#2C2C2A]">
-      <div className="flex h-9 items-center justify-between px-3 [-webkit-app-region:drag]">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5F5E5A]">
+    <main className="h-screen overflow-hidden border-2 border-[#272522] bg-[#F8E6A6] text-[#272522] shadow-[inset_0_0_0_4px_#FFF8DF]">
+      <div className="flex h-10 items-center justify-between border-b-2 border-[#272522] bg-[#F08D65] px-3 [-webkit-app-region:drag]">
+        <div className="border-2 border-[#272522] bg-[#FFF8DF] px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.18em] text-[#272522] shadow-[2px_2px_0_#272522]">
           Settings
         </div>
         <button
-          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-lg leading-none text-[#5F5E5A] hover:bg-[#D3D1C7] hover:text-[#2C2C2A] [-webkit-app-region:no-drag]"
+          className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border-2 border-[#272522] bg-[#FFF8DF] text-base font-black leading-none text-[#272522] shadow-[2px_2px_0_#272522] transition-all hover:-translate-y-0.5 hover:bg-[#FFD66E] [-webkit-app-region:no-drag]"
           onClick={() => window.electronAPI.closeSettings()}
           aria-label="Close settings"
         >
@@ -67,13 +67,13 @@ export function SettingsWindow(): React.JSX.Element {
         </button>
       </div>
 
-      <div className="flex h-[calc(100vh-36px)] flex-col gap-4 overflow-y-auto px-5 pb-5">
-        <section className="flex flex-col gap-3 rounded-xl border-2 border-[#D3D1C7] bg-[#FBFAF5] p-3">
+      <div className="flex h-[calc(100vh-40px)] flex-col gap-5 overflow-y-auto px-5 pb-6 pt-5">
+        <section className="flex flex-col gap-3 rounded-md border-2 border-[#272522] bg-[#FFF8DF] p-3 shadow-[5px_5px_0_#272522]">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5F5E5A]">
+            <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[#272522]">
               timer
             </div>
-            <div className="mt-1 text-xs text-[#888780]">
+            <div className="mt-1 text-xs font-semibold text-[#6B5D45]">
               set the focus length, break lengths, and sessions before the long break
             </div>
           </div>
@@ -109,12 +109,12 @@ export function SettingsWindow(): React.JSX.Element {
           </div>
         </section>
 
-        <section className="flex flex-col gap-3 rounded-xl border-2 border-[#D3D1C7] bg-[#FBFAF5] p-3">
+        <section className="flex flex-col gap-3 rounded-md border-2 border-[#272522] bg-[#FFF8DF] p-3 shadow-[5px_5px_0_#272522]">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5F5E5A]">
+            <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[#272522]">
               break cat
             </div>
-            <div className="mt-1 text-xs text-[#888780]">
+            <div className="mt-1 text-xs font-semibold text-[#6B5D45]">
               choose what appears on break and how large it should be
             </div>
           </div>
@@ -125,15 +125,19 @@ export function SettingsWindow(): React.JSX.Element {
             max={600}
             onChange={(value) => updateField('catGifSize', value)}
           />
-          <div className="text-[11px] text-[#888780]">pick a preset</div>
+          <div className="text-[11px] font-black uppercase tracking-[0.12em] text-[#3A3933]">
+            pick a preset
+          </div>
           <div className="grid grid-cols-3 gap-2">
             {presets.map((preset) => {
               const selected = formValues.catPresetId === preset.id && !formValues.catGifPath
               return (
                 <button
                   key={preset.id}
-                  className={`flex cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-2 transition-colors ${
-                    selected ? 'border-[#2C2C2A] bg-[#F1EFE8]' : 'border-[#D3D1C7] bg-[#E8E5DC]'
+                  className={`flex cursor-pointer flex-col items-center gap-1 rounded-md border-2 p-2 shadow-[3px_3px_0_#272522] transition-all hover:-translate-y-0.5 hover:shadow-[4px_4px_0_#272522] ${
+                    selected
+                      ? 'border-[#272522] bg-[#FFD66E]'
+                      : 'border-[#272522] bg-[#FFFDF2] hover:bg-[#F8E6A6]'
                   }`}
                   onClick={() =>
                     setFormValues((current) => ({
@@ -145,7 +149,7 @@ export function SettingsWindow(): React.JSX.Element {
                 >
                   {isVideoFile(preset.path) ? (
                     <video
-                      className="h-16 w-16 rounded-lg object-contain"
+                      className="h-16 w-16 rounded-sm border-2 border-[#272522] bg-[#FFF8DF] object-contain"
                       src={preset.url}
                       autoPlay
                       loop
@@ -153,27 +157,35 @@ export function SettingsWindow(): React.JSX.Element {
                       playsInline
                     />
                   ) : (
-                    <img className="h-16 w-16 rounded-lg object-contain" src={preset.url} alt="" />
+                    <img
+                      className="h-16 w-16 rounded-sm border-2 border-[#272522] bg-[#FFF8DF] object-contain"
+                      src={preset.url}
+                      alt=""
+                    />
                   )}
-                  <span className="text-center text-[11px] text-[#5F5E5A]">{preset.label}</span>
+                  <span className="text-center text-[11px] font-bold text-[#3A3933]">
+                    {preset.label}
+                  </span>
                 </button>
               )
             })}
           </div>
 
-          <div className="pt-1 text-[11px] text-[#888780]">or upload your own</div>
+          <div className="pt-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#3A3933]">
+            or upload your own
+          </div>
           <button
-            className="w-full cursor-pointer rounded-xl border-2 border-dashed border-[#B4B2A9] py-2 text-sm text-[#888780] transition-colors hover:border-[#2C2C2A] hover:text-[#2C2C2A]"
+            className="w-full cursor-pointer rounded-md border-2 border-dashed border-[#272522] bg-[#FFFDF2] py-2 text-sm font-black text-[#3A3933] shadow-[3px_3px_0_#272522] transition-all hover:-translate-y-0.5 hover:bg-[#FFD66E] hover:shadow-[4px_4px_0_#272522]"
             onClick={chooseCustomCat}
           >
             + upload image or video
           </button>
 
-          <div className="flex w-full flex-col items-center gap-1 border-t border-[#D3D1C7] pt-3">
+          <div className="flex w-full flex-col items-center gap-2 border-t-2 border-[#272522] pt-3">
             {previewSrc && previewIsVideo ? (
               <video
                 id="cat-preview"
-                className="h-auto max-h-40 max-w-full object-contain"
+                className="h-auto max-h-40 max-w-full rounded-sm border-2 border-[#272522] bg-[#FFFDF2] object-contain shadow-[4px_4px_0_#272522]"
                 style={{ width: Math.min(formValues.catGifSize, 260) }}
                 src={previewSrc}
                 autoPlay
@@ -184,13 +196,13 @@ export function SettingsWindow(): React.JSX.Element {
             ) : previewSrc ? (
               <img
                 id="cat-preview"
-                className="h-auto max-h-40 max-w-full object-contain"
+                className="h-auto max-h-40 max-w-full rounded-sm border-2 border-[#272522] bg-[#FFFDF2] object-contain shadow-[4px_4px_0_#272522]"
                 style={{ width: Math.min(formValues.catGifSize, 260) }}
                 src={previewSrc}
                 alt=""
               />
             ) : null}
-            <span className="text-[11px] text-[#888780]">{previewLabel}</span>
+            <span className="text-center text-[11px] font-bold text-[#6B5D45]">{previewLabel}</span>
           </div>
         </section>
 
@@ -206,7 +218,7 @@ export function SettingsWindow(): React.JSX.Element {
         />
 
         <button
-          className="mb-1 mt-auto w-full cursor-pointer rounded-lg bg-[#2C2C2A] px-4 py-2 text-sm font-medium text-[#F1EFE8]"
+          className="mb-1 mt-auto w-full cursor-pointer rounded-md border-2 border-[#272522] bg-[#272522] px-4 py-2.5 text-sm font-black uppercase tracking-[0.08em] text-[#FFF8DF] shadow-[5px_5px_0_#F08D65] transition-all hover:-translate-y-0.5 hover:bg-[#3A3933] hover:shadow-[6px_6px_0_#F08D65] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           onClick={saveSettings}
         >
           Save

@@ -28,11 +28,11 @@ export class WindowManager {
   createMainWindow(): void {
     this.mainWindow = new BrowserWindow({
       width: 260,
-      height: 300,
+      height: 360,
       frame: false,
       alwaysOnTop: true,
       resizable: false,
-      backgroundColor: '#F1EFE8',
+      backgroundColor: '#272522',
       show: false,
       webPreferences: getWindowPreferences()
     })
@@ -108,7 +108,7 @@ export class WindowManager {
       height: 660,
       frame: false,
       resizable: false,
-      backgroundColor: '#F1EFE8',
+      backgroundColor: '#272522',
       webPreferences: getWindowPreferences()
     })
 

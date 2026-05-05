@@ -12,10 +12,10 @@ export function NumberField({
   onChange: (value: number) => void
 }): React.JSX.Element {
   return (
-    <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#5F5E5A]">
+    <label className="flex flex-col gap-1.5 text-[11px] font-black uppercase tracking-[0.12em] text-[#3A3933]">
       {label}
       <input
-        className="h-9 rounded-lg border-2 border-[#D3D1C7] bg-[#FBFAF5] px-2 text-sm font-medium tracking-normal text-[#2C2C2A] outline-none focus:border-[#2C2C2A]"
+        className="h-10 rounded-md border-2 border-[#272522] bg-[#FFFDF2] px-2.5 text-sm font-bold tracking-normal text-[#272522] shadow-[3px_3px_0_#272522] outline-none transition-all focus:-translate-y-0.5 focus:bg-[#FFF8DF] focus:shadow-[4px_4px_0_#272522]"
         type="number"
         min={min}
         max={max}
@@ -36,10 +36,10 @@ export function TextAreaField({
   onChange: (value: string) => void
 }): React.JSX.Element {
   return (
-    <label className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#5F5E5A]">
+    <label className="flex flex-col gap-1.5 text-[11px] font-black uppercase tracking-[0.12em] text-[#3A3933]">
       {label}
       <textarea
-        className="min-h-20 resize-none rounded-lg border-2 border-[#D3D1C7] bg-[#FBFAF5] px-2 py-2 text-sm font-normal normal-case tracking-normal text-[#2C2C2A] outline-none focus:border-[#2C2C2A]"
+        className="min-h-20 resize-none rounded-md border-2 border-[#272522] bg-[#FFFDF2] px-2.5 py-2 text-sm font-semibold normal-case tracking-normal text-[#272522] shadow-[3px_3px_0_#272522] outline-none transition-all focus:-translate-y-0.5 focus:bg-[#FFF8DF] focus:shadow-[4px_4px_0_#272522]"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       />
